@@ -15,6 +15,12 @@ local pallette = {
   deep = 255,
 }
 
+local pi = math.pi
+local no_pi = 0 * pi / 3
+local two_pi = 2 * pi / 3
+local four_pi = 4 * pi / 3
+local sin = math.sin
+
 local function initialize_vehicles()
   global.vehicles = {}
   for _, surface in pairs(game.surfaces) do
@@ -35,10 +41,11 @@ local function on_nth_tick(event)
       local id = vehicle.unit_number
       local nth_tick = event.nth_tick
       local tick = event.tick
+      local modifier = frequency * (tick / nth_tick) + (id * 10)
       local rainbow = {
-        r = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (0 * math.pi / 3)) * 127 + 128,
-        g = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (2 * math.pi / 3)) * 127 + 128,
-        b = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (4 * math.pi / 3)) * 127 + 128,
+        r = sin(modifier + no_pi) * 127 + 128,
+        g = sin(modifier + two_pi) * 127 + 128,
+        b = sin(modifier + four_pi) * 127 + 128,
         a = alpha,
       }
       vehicle.color = rainbow
