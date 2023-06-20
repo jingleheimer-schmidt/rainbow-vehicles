@@ -60,6 +60,7 @@ end
 local function on_built(event)
   local entity = event.created_entity or event.entity or event.destination
   if entity.type == "car" or entity.type == "spider-vehicle" then
+    global.vehicles = global.vehicles or {}
     global.vehicles[entity.unit_number] = entity
   end
 end
