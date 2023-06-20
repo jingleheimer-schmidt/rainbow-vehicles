@@ -32,9 +32,10 @@ end
 
 ---@param event NthTickEventData
 local function on_nth_tick(event)
-  local rainbow_speed = settings.global["vehicle-rainbow-speed"].value
-  local alpha = pallette[settings.global["vehicle-rainbow-palette"].value]
+  local map_settings = settings.global
+  local rainbow_speed = map_settings["vehicle-rainbow-speed"].value
   if rainbow_speed == "off" then return end
+  local alpha = pallette[map_settings["vehicle-rainbow-palette"].value]
   local frequency = speeds[rainbow_speed]
   for unit_number, vehicle in pairs(global.vehicles) do
     if vehicle and vehicle.valid then
