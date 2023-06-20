@@ -9,7 +9,6 @@ Version: 0.0.2
 Date: 02JAN2021
   Changes:
     - implemented a custom vehicle tracking system to significantly reduce UPS issues on large maps
-
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.1
 Date: 30DEC2021
