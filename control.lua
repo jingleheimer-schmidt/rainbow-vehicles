@@ -41,15 +41,12 @@ script.on_configuration_changed(function()
   end
 end)
 
-script.on_nth_tick(10, function(event)
-  local frequency = 0.050
+---@param event NthTickEventData
+local function on_nth_tick(event)
   local rainbow_speed = settings.global["vehicle-rainbow-speed"].value
-  if rainbow_speed == "off" then
-    return
-  else
-    frequency = speeds[rainbow_speed]
-  end
   local alpha = pallette[settings.global["vehicle-rainbow-palette"].value]
+  if rainbow_speed == "off" then return end
+  local frequency = speeds[rainbow_speed]
   for unit_number, vehicle in pairs(global.vehicles) do
     if vehicle and vehicle.valid then
       local id = vehicle.unit_number
@@ -67,7 +64,6 @@ script.on_nth_tick(10, function(event)
     end
   end
 end
-)
 
 ---@param event EventData.on_built_entity | EventData.on_entity_cloned | EventData.on_robot_built_entity | EventData.script_raised_built | EventData.script_raised_revive
 local function on_built(event)
@@ -77,6 +73,7 @@ local function on_built(event)
   end
 end
 
+script.on_nth_tick(5, on_nth_tick)
 script.on_event(defines.events.on_built_entity, on_built)
 script.on_event(defines.events.on_entity_cloned, on_built)
 script.on_event(defines.events.on_robot_built_entity, on_built)
