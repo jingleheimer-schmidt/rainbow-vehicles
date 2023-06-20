@@ -69,7 +69,8 @@ script.on_nth_tick(10, function(event)
 end
 )
 
-function on_built(event)
+---@param event EventData.on_built_entity | EventData.on_entity_cloned | EventData.on_robot_built_entity | EventData.script_raised_built | EventData.script_raised_revive
+local function on_built(event)
   local entity = event.created_entity or event.entity or event.destination
   if entity.type == "car" or entity.type == "spider-vehicle" then
     global.vehicles[entity.unit_number] = entity
