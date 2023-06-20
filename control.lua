@@ -15,31 +15,14 @@ local pallette = {
   deep = 255,
 }
 
-if not global.vehicles then
+local function initialize_vehicles()
   global.vehicles = {}
+  for _, surface in pairs(game.surfaces) do
+    for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
+      global.vehicles[vehicle.unit_number] = vehicle
+    end
+  end
 end
-
-script.on_init(function()
-  for every, surface in pairs(game.surfaces) do
-    for each, vehicle in pairs(surface.find_entities_filtered{type={"car","spider-vehicle"}}) do
-      if not global.vehicles then
-        global.vehicles = {}
-      end
-      global.vehicles[vehicle.unit_number] = vehicle
-    end
-  end
-end)
-
-script.on_configuration_changed(function()
-  for every, surface in pairs(game.surfaces) do
-    for each, vehicle in pairs(surface.find_entities_filtered{type={"car","spider-vehicle"}}) do
-      if not global.vehicles then
-        global.vehicles = {}
-      end
-      global.vehicles[vehicle.unit_number] = vehicle
-    end
-  end
-end)
 
 ---@param event NthTickEventData
 local function on_nth_tick(event)
@@ -73,6 +56,8 @@ local function on_built(event)
   end
 end
 
+script.on_init(initialize_vehicles)
+script.on_configuration_changed(initialize_vehicles)
 script.on_nth_tick(5, on_nth_tick)
 script.on_event(defines.events.on_built_entity, on_built)
 script.on_event(defines.events.on_entity_cloned, on_built)
