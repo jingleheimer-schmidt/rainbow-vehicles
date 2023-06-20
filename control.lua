@@ -55,10 +55,9 @@ script.on_nth_tick(10, function(event)
       local nth_tick = event.nth_tick
       local tick = event.tick
       local rainbow = {
-        r = math.sin(frequency*((tick/nth_tick)+(id*10))+(0*math.pi/3))*127+128,
-        g = math.sin(frequency*((tick/nth_tick)+(id*10))+(2*math.pi/3))*127+128,
-        b = math.sin(frequency*((tick/nth_tick)+(id*10))+(4*math.pi/3))*127+128,
-        a = pallette[settings.global["vehicle-rainbow-palette"].value],
+        r = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (0 * math.pi / 3)) * 127 + 128,
+        g = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (2 * math.pi / 3)) * 127 + 128,
+        b = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (4 * math.pi / 3)) * 127 + 128,
       }
       vehicle.color = rainbow
     else
