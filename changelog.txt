@@ -2,6 +2,7 @@
 Version: 0.0.3
 Date: ????
   Changes:
+    - reduced frequency of mod setting lookups
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 02JAN2021

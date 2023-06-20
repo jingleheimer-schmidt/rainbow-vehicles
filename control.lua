@@ -49,6 +49,7 @@ script.on_nth_tick(10, function(event)
   else
     frequency = speeds[rainbow_speed]
   end
+  local alpha = pallette[settings.global["vehicle-rainbow-palette"].value]
   for unit_number, vehicle in pairs(global.vehicles) do
     if vehicle and vehicle.valid then
       local id = vehicle.unit_number
@@ -58,6 +59,7 @@ script.on_nth_tick(10, function(event)
         r = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (0 * math.pi / 3)) * 127 + 128,
         g = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (2 * math.pi / 3)) * 127 + 128,
         b = math.sin(frequency * ((tick / nth_tick) + (id * 10)) + (4 * math.pi / 3)) * 127 + 128,
+        a = alpha,
       }
       vehicle.color = rainbow
     else
