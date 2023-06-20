@@ -3,6 +3,7 @@ Version: 0.0.3
 Date: ????
   Changes:
     - reduced frequency of mod setting lookups
+    - increased vehicle color update frequency
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 02JAN2021
