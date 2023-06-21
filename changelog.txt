@@ -4,6 +4,7 @@ Date: ????
   Changes:
     - reduced frequency of mod setting lookups
     - increased vehicle color update frequency
+    - added rainbow vehicles to the main menu simulations
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.2
 Date: 02JAN2021
