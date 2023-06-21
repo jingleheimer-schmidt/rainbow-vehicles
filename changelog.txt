@@ -2,6 +2,7 @@
 Version: 0.0.4
 Date: 20JUN2023
   Changes:
+    - resolved goto scope issue in main menu simulations when other mods add locals to the update string
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.3
 Date: 20JUN2023
