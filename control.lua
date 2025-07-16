@@ -22,7 +22,8 @@ local four_pi = 4 * pi / 3
 local sin = math.sin
 
 local function initialize_vehicles()
-    storage.vehicles = {} --[[@type table<uint, LuaEntity>]]
+    --[[@type table<uint, LuaEntity>]]
+    storage.vehicles = {}
     for _, surface in pairs(game.surfaces) do
         for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
             storage.vehicles[vehicle.unit_number] = vehicle
