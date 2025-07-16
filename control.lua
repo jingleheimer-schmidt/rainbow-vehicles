@@ -22,10 +22,10 @@ local four_pi = 4 * pi / 3
 local sin = math.sin
 
 local function initialize_vehicles()
-    global.vehicles = {} --[[@type table<uint, LuaEntity>]]
+    storage.vehicles = {} --[[@type table<uint, LuaEntity>]]
     for _, surface in pairs(game.surfaces) do
         for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
-            global.vehicles[vehicle.unit_number] = vehicle
+            storage.vehicles[vehicle.unit_number] = vehicle
         end
     end
 end
@@ -37,7 +37,7 @@ local function on_nth_tick(event)
     if rainbow_speed == "off" then return end
     local alpha = pallette[map_settings["vehicle-rainbow-palette"].value]
     local frequency = speeds[rainbow_speed]
-    for unit_number, vehicle in pairs(global.vehicles) do
+    for unit_number, vehicle in pairs(storage.vehicles) do
         if vehicle and vehicle.valid then
             local id = vehicle.unit_number
             local nth_tick = event.nth_tick
@@ -51,7 +51,7 @@ local function on_nth_tick(event)
             }
             vehicle.color = rainbow
         else
-            global.vehicles[unit_number] = nil
+            storage.vehicles[unit_number] = nil
         end
     end
 end
@@ -60,8 +60,8 @@ end
 local function on_built(event)
     local entity = event.created_entity or event.entity or event.destination
     if entity.type == "car" or entity.type == "spider-vehicle" then
-        global.vehicles = global.vehicles or {}
-        global.vehicles[entity.unit_number] = entity
+        storage.vehicles = storage.vehicles or {}
+        storage.vehicles[entity.unit_number] = entity
     end
 end
 
