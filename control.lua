@@ -58,7 +58,7 @@ end
 
 ---@param event EventData.on_built_entity | EventData.on_entity_cloned | EventData.on_robot_built_entity | EventData.script_raised_built | EventData.script_raised_revive
 local function on_built(event)
-    local entity = event.created_entity or event.entity or event.destination
+    local entity = event.entity or event.destination
     if entity.type == "car" or entity.type == "spider-vehicle" then
         storage.vehicles = storage.vehicles or {}
         storage.vehicles[entity.unit_number] = entity
