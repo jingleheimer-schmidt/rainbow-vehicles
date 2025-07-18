@@ -166,9 +166,9 @@ local country_flag_themes = {
         util.color("#FFFFFF"),               -- white
     },
     ["ethiopia"] = {                         -- population 105 million, rank 13
-        util.color("#098930"),               -- yellow
+        util.color("#098930"),               -- green
         util.color("#FCDD0C"),               -- yellow
-        util.color("#DA131B"),               -- yellow
+        util.color("#DA131B"),               -- red
     },
     ["egypt"] = {                            -- population 102 million, rank 14
         util.color("#CE1126"),               -- red
