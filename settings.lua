@@ -10,7 +10,8 @@ local rainbowSpeedSetting = {
         "slow",
         "default",
         "fast",
-        "veryfast"
+        "veryfast",
+        "extreme",
     }
 }
 
