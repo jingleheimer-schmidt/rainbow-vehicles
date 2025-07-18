@@ -394,8 +394,6 @@ local function on_nth_tick(event)
     end
 end
 
-script.on_nth_tick(2, on_nth_tick)
-
 ---@param name string
 ---@return string
 local function get_color_theme(name)
@@ -499,7 +497,7 @@ end
 
 script.on_init(initialize_vehicles)
 script.on_configuration_changed(initialize_vehicles)
-script.on_nth_tick(5, on_nth_tick)
+script.on_nth_tick(3, on_nth_tick)
 script.on_event(defines.events.on_built_entity, on_built_entity)
 script.on_event(defines.events.on_entity_cloned, on_entity_cloned)
 script.on_event(defines.events.on_robot_built_entity, on_robot_built_entity)
