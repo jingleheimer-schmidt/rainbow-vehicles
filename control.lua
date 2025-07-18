@@ -301,6 +301,16 @@ local country_flag_keys = {}
 for name, _ in pairs(country_flag_themes) do
     table.insert(country_flag_keys, name)
 end
+local all_keys = {}
+for _, key in pairs(continuous_theme_keys) do
+    table.insert(all_keys, key)
+end
+for _, key in pairs(pride_flag_keys) do
+    table.insert(all_keys, key)
+end
+for _, key in pairs(country_flag_keys) do
+    table.insert(all_keys, key)
+end
 
 local sin = math.sin
 local floor = math.floor
@@ -394,14 +404,7 @@ local function get_color_theme(name)
     elseif stepwise_themes[name] then
         return name
     elseif name == "random all" then
-        local chance = math.random(3)
-        if chance == 1 then
-            return continuous_theme_keys[math.random(#continuous_theme_keys)]
-        elseif chance == 2 then
-            return pride_flag_keys[math.random(#pride_flag_keys)]
-        else
-            return country_flag_keys[math.random(#country_flag_keys)]
-        end
+        return all_keys[math.random(#all_keys)]
     elseif name == "random rainbow" then
         return continuous_theme_keys[math.random(#continuous_theme_keys)]
     elseif name == "random pride" then
