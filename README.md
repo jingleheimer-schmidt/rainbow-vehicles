@@ -2,7 +2,7 @@
 
 # Overview
 Animated vehicle colors!
-This mod cycles car, tank, and spidertron colors through through dynamic themes.
+This mod cycles car, tank, and spidertron colors through dynamic themes.
 
 ----------
 # Features
