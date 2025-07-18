@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: ????
+  Changes:
+    - updated to Factorio 2.0
+    - added color themes for pride and country flags
+    - added extreme option to the speed setting
+    - updated main menu simulations to use .mods api
+---------------------------------------------------------------------------------------------------
 Version: 0.0.4
 Date: 20JUN2023
   Changes:
