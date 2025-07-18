@@ -5,7 +5,7 @@
   "author": "asher_sky",
   "contact": "",
   "homepage": "",
-  "description": "automatically cycles vehicle colors through the rainbow",
+  "description": "Automatically cycles vehicle colors through the rainbow",
   "factorio_version": "2.0",
   "dependencies": [
 	"base"
