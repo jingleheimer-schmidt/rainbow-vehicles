@@ -1,13 +1,18 @@
+
 {
-  "name": "rainbow-vehicles",
-  "version": "0.1.0",
-  "title": "Rainbow Vehicles",
-  "author": "asher_sky",
-  "contact": "",
-  "homepage": "",
-  "description": "Automatically cycles vehicle colors through the rainbow",
-  "factorio_version": "2.0",
-  "dependencies": [
-	"base"
-	]
+    "name": "rainbow-vehicles",
+    "version": "0.1.0",
+    "title": "Rainbow Vehicles",
+    "author": "asher_sky",
+    "contact": "",
+    "homepage": "",
+    "description": "Automatically cycles vehicle colors through the rainbow and other color themes",
+    "factorio_version": "2.0",
+    "dependencies": [
+        "base"
+    ],
+    "package": {
+        "sync_portal_details": true,
+        "readme": "README.md"
+    }
 }
