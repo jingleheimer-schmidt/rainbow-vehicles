@@ -1,7 +1,8 @@
 
-local rainbowSpeedSetting = {
+---@type data.ModStringSettingPrototype
+local rainbow_speed = {
     type = "string-setting",
-    name = "vehicle-rainbow-speed",
+    name = "rainbow-vehicles-speed",
     setting_type = "runtime-global",
     default_value = "default",
     allowed_values = {
@@ -15,7 +16,8 @@ local rainbowSpeedSetting = {
     }
 }
 
-local rainbowPaletteSetting = {
+---@type data.ModStringSettingPrototype
+local rainbow_theme = {
     type = "string-setting",
     name = "rainbow-vehicles-theme",
     setting_type = "runtime-global",
@@ -80,6 +82,6 @@ local rainbowPaletteSetting = {
 }
 
 data:extend({
-    rainbowSpeedSetting,
-    rainbowPaletteSetting
+    rainbow_speed,
+    rainbow_theme,
 })
