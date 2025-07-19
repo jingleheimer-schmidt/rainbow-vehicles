@@ -319,6 +319,8 @@ local pi_0 = 0 * math.pi / 3
 local pi_2 = 2 * math.pi / 3
 local pi_4 = 4 * math.pi / 3
 
+-- precomputed color lookup tables for continuous themes
+---@type table<string, Color[]>
 local color_luts = {}
 local lut_resolution = 4096 -- lots of colors to choose from to make it nice and smooth
 for theme_name, theme_data in pairs(continuous_themes) do
@@ -369,7 +371,6 @@ local function get_rainbow_color(tick, unique_id, frequency, theme_name)
             t = (step_time - sharpness) / (1 - sharpness) -- Smoothly interpolate at the end
         end
 
-        -- Base and next colors
         local base_color = stepwise_theme[base_index]
         local next_color = stepwise_theme[next_index]
 
