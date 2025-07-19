@@ -1,6 +1,7 @@
 
 ---@type {string: number}
 local speeds = {
+    off = 0,
     veryslow = 0.010,
     slow = 0.025,
     default = 0.050,
@@ -318,34 +319,42 @@ local pi_0 = 0 * math.pi / 3
 local pi_2 = 2 * math.pi / 3
 local pi_4 = 4 * math.pi / 3
 
+-- precomputed color lookup tables for continuous themes
+---@type table<string, Color[]>
+local color_luts = {}
+local lut_resolution = 4096 -- lots of colors to choose from to make it nice and smooth
+for theme_name, theme_data in pairs(continuous_themes) do
+    local amplitude = theme_data.amplitude
+    local center = theme_data.center
+    local color_lut = {}
+    for i = 0, lut_resolution - 1 do
+        local angle = -(i / lut_resolution) * 2 * math.pi
+        color_lut[i + 1] = {
+            r = sin(angle + pi_0) * amplitude + center,
+            g = sin(angle + pi_2) * amplitude + center,
+            b = sin(angle + pi_4) * amplitude + center,
+            a = 0.5 * 255
+        }
+    end
+    color_luts[theme_name] = color_lut
+end
+
 ---@param tick integer
----@param vehicle_unit_number uint
----@param speed string
+---@param unique_id uint
+---@param frequency uint
 ---@param theme_name string
 ---@return Color
-local function get_rainbow_color(tick, vehicle_unit_number, speed, theme_name)
-    local frequency = speeds[speed] / 10
-    local modifier = (vehicle_unit_number * 3 + tick) * frequency
-    local continuous_theme = continuous_themes[theme_name]
+local function get_rainbow_color(tick, unique_id, frequency, theme_name)
+    local modifier = (unique_id + tick) * frequency
+    local color_lut = color_luts[theme_name]
     local stepwise_theme = stepwise_themes[theme_name]
-    if continuous_theme then
-        local amplitude = continuous_theme.amplitude
-        local center = continuous_theme.center
-        modifier = -modifier -- cycle colors in rainbow order
-        frequency = frequency * 2
-        return {
-            r = sin(modifier + pi_0) * amplitude + center,
-            g = sin(modifier + pi_2) * amplitude + center,
-            b = sin(modifier + pi_4) * amplitude + center,
-            a = 255 * 0.5, -- player.color uses 0.5
-        }
+    if color_lut then
+        local index = floor(((modifier / 8) % 1) * lut_resolution) + 1 --modifier controls speed
+        return color_lut[index]
     elseif stepwise_theme then
         -- Handle stepwise themes
         local sharpness = 0.8
         local count = #stepwise_theme
-        if count == 0 then
-            return { 1, 1, 1, 0.65 } -- Default to white if the theme is empty
-        end
 
         -- Determine the current base and next indices
         local base_index = floor(modifier % count) + 1
@@ -362,7 +371,6 @@ local function get_rainbow_color(tick, vehicle_unit_number, speed, theme_name)
             t = (step_time - sharpness) / (1 - sharpness) -- Smoothly interpolate at the end
         end
 
-        -- Base and next colors
         local base_color = stepwise_theme[base_index]
         local next_color = stepwise_theme[next_index]
 
@@ -380,17 +388,20 @@ end
 
 ---@param event NthTickEventData
 local function on_nth_tick(event)
-    storage.vehicles = storage.vehicles or {}
-    local speed = storage.speed
-    if speed == "off" then return end
-    for unit_number, vehicle_data in pairs(storage.vehicles) do
+    local frequency = storage.frequency
+    if frequency == 0 then return end
+    local tick = event.tick
+    local tick_mod = tick % 3
+    local vehicles = storage.vehicles or {}
+    for unit_number, vehicle_data in pairs(vehicles) do
+        if unit_number % 3 ~= tick_mod then goto next_vehicle end
         local vehicle = vehicle_data.vehicle
         if vehicle and vehicle.valid then
-            local color = get_rainbow_color(event.tick, unit_number, speed, vehicle_data.color_theme)
-            vehicle.color = color
+            vehicle.color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.theme_name)
         else
             storage.vehicles[unit_number] = nil
         end
+        ::next_vehicle::
     end
 end
 
@@ -415,14 +426,17 @@ local function get_color_theme(name)
 end
 
 local function initialize_vehicles()
+    ---@type table<integer, { vehicle: LuaEntity, theme_name: string, phase_offset: number }>
     storage.vehicles = {}
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
+    storage.frequency = speeds[storage.speed] / 10
     storage.theme = settings.global["rainbow-vehicles-theme"].value --[[@as string]]
     for _, surface in pairs(game.surfaces) do
         for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
             storage.vehicles[vehicle.unit_number] = {
                 vehicle = vehicle,
-                color_theme = get_color_theme(storage.theme),
+                theme_name = get_color_theme(storage.theme),
+                phase_offset = vehicle.unit_number * 3
             }
         end
     end
@@ -431,11 +445,12 @@ end
 ---@param event EventData.on_runtime_mod_setting_changed
 local function on_runtime_mod_setting_changed(event)
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
+    storage.frequency = speeds[storage.speed] / 10
     local old_theme = storage.theme
     local new_theme = settings.global["rainbow-vehicles-theme"].value --[[@as string]]
     if old_theme ~= new_theme then
         for _, vehicle_data in pairs(storage.vehicles) do
-            vehicle_data.color_theme = get_color_theme(new_theme)
+            vehicle_data.theme_name = get_color_theme(new_theme)
         end
     end
     storage.theme = new_theme
@@ -446,7 +461,8 @@ local function vehicle_built(vehicle)
     storage.vehicles = storage.vehicles or {}
     storage.vehicles[vehicle.unit_number] = {
         vehicle = vehicle,
-        color_theme = get_color_theme(storage.theme)
+        theme_name = get_color_theme(storage.theme),
+        phase_offset = vehicle.unit_number * 3
     }
 end
 
@@ -497,7 +513,7 @@ end
 
 script.on_init(initialize_vehicles)
 script.on_configuration_changed(initialize_vehicles)
-script.on_nth_tick(3, on_nth_tick)
+script.on_nth_tick(1, on_nth_tick)
 script.on_event(defines.events.on_built_entity, on_built_entity)
 script.on_event(defines.events.on_entity_cloned, on_entity_cloned)
 script.on_event(defines.events.on_robot_built_entity, on_robot_built_entity)
