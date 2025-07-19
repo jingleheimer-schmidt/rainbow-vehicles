@@ -344,10 +344,9 @@ end
 ---@return Color
 local function get_rainbow_color(tick, unique_id, frequency, theme_name)
     local modifier = (unique_id + tick) * frequency
-    local continuous_theme = continuous_themes[theme_name]
+    local color_lut = color_luts[theme_name]
     local stepwise_theme = stepwise_themes[theme_name]
-    if continuous_theme then
-        local color_lut = color_luts[theme_name]
+    if color_lut then
         local index = floor((modifier % 1) * lut_resolution) + 1
         return color_lut[index]
     elseif stepwise_theme then
