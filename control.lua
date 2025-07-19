@@ -318,6 +318,24 @@ local pi_0 = 0 * math.pi / 3
 local pi_2 = 2 * math.pi / 3
 local pi_4 = 4 * math.pi / 3
 
+local color_luts = {}
+local lut_resolution = 4096 -- lots of colors to choose from to make it nice and smooth
+for theme_name, theme_data in pairs(continuous_themes) do
+    local amplitude = theme_data.amplitude
+    local center = theme_data.center
+    local color_lut = {}
+    for i = 0, lut_resolution - 1 do
+        local angle = -(i / lut_resolution) * 2 * math.pi
+        color_lut[i + 1] = {
+            r = sin(angle + pi_0) * amplitude + center,
+            g = sin(angle + pi_2) * amplitude + center,
+            b = sin(angle + pi_4) * amplitude + center,
+            a = 0.5 * 255
+        }
+    end
+    color_luts[theme_name] = color_lut
+end
+
 ---@param tick integer
 ---@param vehicle_unit_number uint
 ---@param speed string
