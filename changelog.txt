@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.0
-Date: ????
+Date: 2025-07-19
   Changes:
     - updated to Factorio 2.0
     - added color themes for pride and country flags
