@@ -347,16 +347,9 @@ local function get_rainbow_color(tick, vehicle_unit_number, speed, theme_name)
     local continuous_theme = continuous_themes[theme_name]
     local stepwise_theme = stepwise_themes[theme_name]
     if continuous_theme then
-        local amplitude = continuous_theme.amplitude
-        local center = continuous_theme.center
-        modifier = -modifier -- cycle colors in rainbow order
-        frequency = frequency * 2
-        return {
-            r = sin(modifier + pi_0) * amplitude + center,
-            g = sin(modifier + pi_2) * amplitude + center,
-            b = sin(modifier + pi_4) * amplitude + center,
-            a = 255 * 0.5, -- player.color uses 0.5
-        }
+        local color_lut = color_luts[theme_name]
+        local index = floor((modifier % 1) * lut_resolution) + 1
+        return color_lut[index]
     elseif stepwise_theme then
         -- Handle stepwise themes
         local sharpness = 0.8
