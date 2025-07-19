@@ -394,8 +394,10 @@ local function on_nth_tick(event)
     local frequency = storage.frequency
     if frequency == 0 then return end
     local tick = event.tick
+    local tick_mod = tick % 3
     local vehicles = storage.vehicles or {}
     for unit_number, vehicle_data in pairs(vehicles) do
+        if unit_number % 3 ~= tick_mod then goto next_vehicle end
         local vehicle = vehicle_data.vehicle
         if vehicle and vehicle.valid then
             local color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.color_theme)
@@ -403,6 +405,7 @@ local function on_nth_tick(event)
         else
             storage.vehicles[unit_number] = nil
         end
+        ::next_vehicle::
     end
 end
 
@@ -513,7 +516,7 @@ end
 
 script.on_init(initialize_vehicles)
 script.on_configuration_changed(initialize_vehicles)
-script.on_nth_tick(3, on_nth_tick)
+script.on_nth_tick(1, on_nth_tick)
 script.on_event(defines.events.on_built_entity, on_built_entity)
 script.on_event(defines.events.on_entity_cloned, on_entity_cloned)
 script.on_event(defines.events.on_robot_built_entity, on_robot_built_entity)
