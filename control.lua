@@ -399,7 +399,7 @@ local function on_nth_tick(event)
         if unit_number % 3 ~= tick_mod then goto next_vehicle end
         local vehicle = vehicle_data.vehicle
         if vehicle and vehicle.valid then
-            vehicle.color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.color_theme)
+            vehicle.color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.theme_name)
         else
             storage.vehicles[unit_number] = nil
         end
@@ -428,7 +428,7 @@ local function get_color_theme(name)
 end
 
 local function initialize_vehicles()
-    ---@type table<integer, { vehicle: LuaEntity, color_theme: string, phase_offset: number }>
+    ---@type table<integer, { vehicle: LuaEntity, theme_name: string, phase_offset: number }>
     storage.vehicles = {}
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
     storage.frequency = speeds[storage.speed] / 10
@@ -437,7 +437,7 @@ local function initialize_vehicles()
         for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
             storage.vehicles[vehicle.unit_number] = {
                 vehicle = vehicle,
-                color_theme = get_color_theme(storage.theme),
+                theme_name = get_color_theme(storage.theme),
                 phase_offset = vehicle.unit_number * 3
             }
         end
@@ -452,7 +452,7 @@ local function on_runtime_mod_setting_changed(event)
     local new_theme = settings.global["rainbow-vehicles-theme"].value --[[@as string]]
     if old_theme ~= new_theme then
         for _, vehicle_data in pairs(storage.vehicles) do
-            vehicle_data.color_theme = get_color_theme(new_theme)
+            vehicle_data.theme_name = get_color_theme(new_theme)
         end
     end
     storage.theme = new_theme
@@ -463,7 +463,7 @@ local function vehicle_built(vehicle)
     storage.vehicles = storage.vehicles or {}
     storage.vehicles[vehicle.unit_number] = {
         vehicle = vehicle,
-        color_theme = get_color_theme(storage.theme),
+        theme_name = get_color_theme(storage.theme),
         phase_offset = vehicle.unit_number * 3
     }
 end
