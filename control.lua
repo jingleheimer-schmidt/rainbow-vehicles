@@ -399,8 +399,7 @@ local function on_nth_tick(event)
         if unit_number % 3 ~= tick_mod then goto next_vehicle end
         local vehicle = vehicle_data.vehicle
         if vehicle and vehicle.valid then
-            local color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.color_theme)
-            vehicle.color = color
+            vehicle.color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.color_theme)
         else
             storage.vehicles[unit_number] = nil
         end
