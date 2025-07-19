@@ -428,6 +428,7 @@ local function get_color_theme(name)
 end
 
 local function initialize_vehicles()
+    ---@type table<integer, { vehicle: LuaEntity, color_theme: string, phase_offset: number }>
     storage.vehicles = {}
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
     storage.frequency = speeds[storage.speed] / 10
