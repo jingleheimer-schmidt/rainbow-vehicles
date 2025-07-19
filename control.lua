@@ -353,9 +353,6 @@ local function get_rainbow_color(tick, unique_id, frequency, theme_name)
         -- Handle stepwise themes
         local sharpness = 0.8
         local count = #stepwise_theme
-        if count == 0 then
-            return { 1, 1, 1, 0.65 } -- Default to white if the theme is empty
-        end
 
         -- Determine the current base and next indices
         local base_index = floor(modifier % count) + 1
