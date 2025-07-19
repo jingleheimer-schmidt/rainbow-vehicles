@@ -1,6 +1,7 @@
 
 ---@type {string: number}
 local speeds = {
+    off = 0,
     veryslow = 0.010,
     slow = 0.025,
     default = 0.050,
@@ -337,13 +338,12 @@ for theme_name, theme_data in pairs(continuous_themes) do
 end
 
 ---@param tick integer
----@param vehicle_unit_number uint
----@param speed string
+---@param unique_id uint
+---@param frequency uint
 ---@param theme_name string
 ---@return Color
-local function get_rainbow_color(tick, vehicle_unit_number, speed, theme_name)
-    local frequency = speeds[speed] / 10
-    local modifier = (vehicle_unit_number * 3 + tick) * frequency
+local function get_rainbow_color(tick, unique_id, frequency, theme_name)
+    local modifier = (unique_id + tick) * frequency
     local continuous_theme = continuous_themes[theme_name]
     local stepwise_theme = stepwise_themes[theme_name]
     if continuous_theme then
@@ -391,13 +391,14 @@ end
 
 ---@param event NthTickEventData
 local function on_nth_tick(event)
-    storage.vehicles = storage.vehicles or {}
-    local speed = storage.speed
-    if speed == "off" then return end
-    for unit_number, vehicle_data in pairs(storage.vehicles) do
+    local frequency = storage.frequency
+    if frequency == 0 then return end
+    local tick = event.tick
+    local vehicles = storage.vehicles or {}
+    for unit_number, vehicle_data in pairs(vehicles) do
         local vehicle = vehicle_data.vehicle
         if vehicle and vehicle.valid then
-            local color = get_rainbow_color(event.tick, unit_number, speed, vehicle_data.color_theme)
+            local color = get_rainbow_color(tick, vehicle_data.phase_offset, frequency, vehicle_data.color_theme)
             vehicle.color = color
         else
             storage.vehicles[unit_number] = nil
@@ -428,12 +429,14 @@ end
 local function initialize_vehicles()
     storage.vehicles = {}
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
+    storage.frequency = speeds[storage.speed] / 10
     storage.theme = settings.global["rainbow-vehicles-theme"].value --[[@as string]]
     for _, surface in pairs(game.surfaces) do
         for _, vehicle in pairs(surface.find_entities_filtered { type = { "car", "spider-vehicle" } }) do
             storage.vehicles[vehicle.unit_number] = {
                 vehicle = vehicle,
                 color_theme = get_color_theme(storage.theme),
+                phase_offset = vehicle.unit_number * 3
             }
         end
     end
@@ -442,6 +445,7 @@ end
 ---@param event EventData.on_runtime_mod_setting_changed
 local function on_runtime_mod_setting_changed(event)
     storage.speed = settings.global["rainbow-vehicles-speed"].value --[[@as string]]
+    storage.frequency = speeds[storage.speed] / 10
     local old_theme = storage.theme
     local new_theme = settings.global["rainbow-vehicles-theme"].value --[[@as string]]
     if old_theme ~= new_theme then
@@ -457,7 +461,8 @@ local function vehicle_built(vehicle)
     storage.vehicles = storage.vehicles or {}
     storage.vehicles[vehicle.unit_number] = {
         vehicle = vehicle,
-        color_theme = get_color_theme(storage.theme)
+        color_theme = get_color_theme(storage.theme),
+        phase_offset = vehicle.unit_number * 3
     }
 end
 
